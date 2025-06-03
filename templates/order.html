@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONEWAY 7 - Order Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">O</div>
+            <div class="logo-text">
+                <div class="logo-title">ONEWAY 7</div>
+                <div class="logo-subtitle" id="current-date-time">Loading date and time...</div>
+            </div>
+        </div>
+        
+        <div class="search-container" style="position: relative;">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" placeholder="Cari makanan / minuman..." id="search-input" autocomplete="off">
+                <span id="clear-search" style="margin-left: 10px; cursor: pointer; display: none;">❌</span>
+            </div>
+            <ul id="search-suggestions" style="position: absolute; top: 45px; left: 0; right: 0; background: white; border: 1px solid #ccc; border-radius: 8px; max-height: 200px; overflow-y: auto; list-style: none; padding: 5px 0; margin: 0; z-index: 1000; display: none;">
+            </ul>
+        </div>
+        
+        <div class="order-header">
+            <div class="order-title">
+                <div style="display: flex; align-items: center;">
+                    <span style="margin-right: 13px;">🧾</span>
+                    <span>Order Menu</span>
+                </div>
+                <div class="order-number" style="font-size: 11px; color: #888;">Order No.1</div>
+            </div>
+        </div>
+
+        <div style="display: flex; position: relative;">
+            <span style="cursor: pointer;" id="menu-toggle">⋮</span>
+            <div id="dropdown-menu" style="display: none; position: absolute; top: 30px; right: 0; background: white; border: 1px solid #ccc; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 1000;">
+                <div style="padding: 8px 15px; cursor: pointer;" onclick="showHistoryModal()">History</div>
+                <div style="padding: 8px 15px; cursor: pointer;" onclick="showAboutModal()">About</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="category">
+                <div class="category-title">
+                    <span class="category-icon">📋</span>
+                    MAKANAN
+                </div>
+                <div class="category-item active" data-category="nasi-goreng" onclick="selectCategory(this, 'nasi-goreng')">Ayam Geprek</div>
+            </div>
+            
+            <div class="category">
+                <div class="category-title">
+                    <span class="category-icon">🥤</span>
+                    MINUMAN
+                </div>
+                <div class="category-item" data-category="nutrisari" onclick="selectCategory(this, 'nutrisari')">Nutrisari</div>
+                <div class="category-item" data-category="teh" onclick="selectCategory(this, 'teh')">Es Teh</div>
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="content" id="content">
+            <!-- Nasi Goreng Menu Section -->
+            <div class="menu-section active" id="nasi-goreng">
+                <div class="menu-grid">
+                    <div class="menu-item" onclick="addToOrder('Nasgor Biasa', 10000, 'Ayam.jpg')">
+                        <img src="/static/images/Ayam.jpg" alt="Nasgor Biasa">
+                        <div class="menu-item-title">Ayam Geprek</div>
+                        <div class="menu-item-price">Rp. 10.000</div>
+                    </div>
+                    
+                     <div class="menu-item" onclick="addToOrder('Nasgor Chinese', 13000, 'Mini.jpg')">
+                        <img src="{{ url_for('static', filename='images/Mini.jpg') }}" alt="Nasgor Chinese">
+                        <div class="menu-item-title">Paket Mini</div>
+                        <div class="menu-item-price">Rp. 13.000</div>
+                    </div>
+                    
+                    <div class="menu-item" onclick="addToOrder('Nasgor Ayam', 13000, 'Jumbo.jpg')">
+                        <img src="{{ url_for('static', filename='images/Jumbo.jpg') }}" alt="Nasgor Ayam">
+                        <div class="menu-item-title">Paket Jumbo</div>
+                        <div class="menu-item-price">Rp. 15.000</div>
+                    </div>  
+                </div>
+            </div>
+            
+            <!-- Potongan kode yang diperbaiki (dalam konteks bagian minuman) -->
+
+<!-- Nutrisari Menu Section -->
+<div class="menu-section" id="nutrisari">
+  <div class="menu-grid">
+    <div class="menu-item" onclick="addToOrder('Nutrisari Dingin', 5000, 'Ncool.jpg')">
+      <img src="{{ url_for('static', filename='images/Ncool.jpg') }}" alt="Nutrisari Dingin">
+      <div class="menu-item-title">Nutrisari dingin</div>
+      <div class="menu-item-price">Rp. 5.000</div>
+    </div>
+
+    <div class="menu-item" onclick="addToOrder('Nutrisari Tanpa Es', 7000, 'N.jpg')">
+      <img src="{{ url_for('static', filename='images/N.jpg') }}" alt="Nutrisari Tanpa Es">
+      <div class="menu-item-title">Nutrisari Tanpa Es</div>
+      <div class="menu-item-price">Rp. 5.000</div>
+    </div>
+  </div>
+</div>
+
+<!-- Teh Menu Section -->
+<div class="menu-section" id="teh">
+  <div class="menu-grid">
+    <div class="menu-item" onclick="addToOrder('Es Teh', 3000, 'es_teh.jpg')">
+      <img src="{{ url_for('static', filename='images/es_teh.jpg') }}" alt="Es Teh">
+      <div class="menu-item-title">Es Teh</div>
+      <div class="menu-item-price">Rp. 3.000</div>
+    </div>
+
+    <div class="menu-item" onclick="addToOrder('Teh Panas', 5000, 'teh_panas.jpg')">
+      <img src="{{ url_for('static', filename='images/teh_panas.jpg') }}" alt="Teh Panas">
+      <div class="menu-item-title">Teh Panas</div>
+      <div class="menu-item-price">Rp. 5.000</div>
+    </div>
+  </div>
+</div>
+        </div>
+<!-- Order Panel -->
+        <div class="order-panel" id="order-panel"style="margin-right: 7px;">
+            <div id="order-items-container">
+                <!-- Order items will be added here dynamically -->
+                <div class="empty-state">
+                    <div class="empty-state-icon">🛒</div>
+                    <div>Your order is empty</div>
+                    <div>Select items from the menu</div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="order-summary">
+                    <div id="total-items-count">0 items</div>
+                    <div id="total-price">Rp.0</div>
+                </div>
+                
+                <div class="checkout-container">
+                    <button class="receipt-btn">📃</button>
+                    <button class="checkout-btn" onclick="openModal()">Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Total Pesanan -->
+<div id="totalPesananModal" class="modal">
+  <div class="total-pesanan-container">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <h2>Total Pesanan</h2>
+    
+    <!-- Header Kolom -->
+    
+    <!-- Dinamis: Diisi oleh JS -->
+    <div class="order-items" id="orderDetails"></div>
+    
+    <!-- Tombol Aksi -->
+    <div class="button-group">
+      <button onclick="editOrder()">Edit</button>
+      <button onclick="payOrder()">Bayar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Metode Pembayaran -->
+<div id="paymentMethodModal" class="modal">
+  <div class="total-pesanan-container">
+    <span class="close-btn" onclick="closePaymentModal()">&times;</span>
+    <h2 style="color: #1a1a66; font-size: 20px;">Pilih Metode Pembayaran</h2>
+    <div class="button-group" style="flex-direction: column; gap: 20px; margin-top: 100px;">
+      <button onclick="handlePayment('TUNAI')">TUNAI</button>
+      <button onclick="handlePayment('QRIS')">QRIS</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Input Nominal Tunai -->
+<div id="cashInputModal" class="modal">
+  <div class="total-pesanan-container">
+    <span class="close-btn" onclick="closeCashInputModal()">&times;</span>
+    <h3 style="color:#1a73e8;"><span>🧮</span> Masukan Nominal Uang</h3>
+    <input id="cashAmountInput" type="number" placeholder="Rp.50000" 
+           style="width: 100%; margin: 20px 0; padding: 12px; font-size: 16px; border-radius: 12px; border: 1px solid #ccc;">
+    <button onclick="confirmCashPayment()" 
+            style="width: 100%; padding: 10px; border: none; background-color: #1a73e8; color: white; border-radius: 8px;">
+      Bayar
+    </button>
+  </div>
+</div>
+
+<!-- Modal QRIS -->
+<div id="qrisModal" class="modal">
+  <div class="total-pesanan-container">
+    <span class="close-btn" onclick="closeQrisModal()">&times;</span>
+    <img src="/static/images/qris.png" alt="QRIS" style="width: 100%; max-height: 250px; object-fit: contain;">
+    <button onclick="confirmQrisPayment()" 
+            style="width: 100%; margin-top: 15px; padding: 10px; background-color: #1a73e8; color: white; border: none; border-radius: 8px;">
+      Selesai
+    </button>
+  </div>
+</div>
+
+<!-- Modal Pembayaran Berhasil -->
+<div id="successModal" class="modal">
+  <div class="total-pesanan-container">
+    <span class="close-btn" onclick="closeSuccessModal()">&times;</span>
+    <div style="text-align:center;">
+      <div style="font-size: 30px; color: green;">✅</div>
+      <h2 style="color:#1a73e8;">Pembayaran Berhasil !</h2>
+    </div>
+    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #ccc; margin: 10px 0;">
+      <span>Order</span><span id="orderNumber">#35</span>
+    </div>
+    <div style="margin-bottom: 5px;">Total: <span id="paymentTotal">Rp.0</span></div>
+    <div style="margin-bottom: 5px;">Jumlah Uang: <span id="paymentCash">Rp.0</span></div>
+    <div style="margin-bottom: 15px;">Kembalian: <span id="paymentChange">Rp.0</span></div>
+    <div class="button-group">
+      <button onclick="goHome()">🏠 Home</button>
+      <button onclick="printReceipt()">🖨 Cetak</button>
+    </div>
+  </div>
+</div>
+
+<!-- History Modal -->
+<div id="historyModal" class="modal">
+  <div class="total-pesanan-container">
+    <span class="close-btn" onclick="closeHistoryModal()">&times;</span>
+    <h2>Order History</h2>
+    <div id="historyContent" style="flex: 1; overflow-y: auto;">
+      <!-- History items will be added here -->
+    </div>
+    <div class="button-group" style="margin-top: 15px;">
+      <button onclick="closeHistoryModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- About Modal -->
+<div id="aboutModal" class="modal">
+  <div class="total-pesanan-container">
+    <span class="close-btn" onclick="closeAboutModal()">&times;</span>
+    <h2>About ONEWAY 7</h2>
+    <div style="flex: 1; overflow-y: auto; padding: 10px;">
+      <p>ONEWAY 7 adalah aplikasi berbasis web untuk memudahkan proses pemesanan makanan dan minuman di restoran.</p>
+      <h3 style="margin-top: 15px;">Cara Penggunaan:</h3>
+      <ol style="margin-top: 10px;">
+        <li>Pilih kategori makanan/minuman dari menu sebelah kiri</li>
+        <li>Klik item yang ingin dipesan untuk menambahkannya ke keranjang</li>
+        <li>Atur jumlah pesanan dengan tombol +/- di keranjang</li>
+        <li>Klik tombol Order untuk melihat ringkasan pesanan</li>
+        <li>Pilih metode pembayaran (Tunai atau QRIS)</li>
+        <li>Selesaikan pembayaran dan cetak struk jika diperlukan</li>
+      </ol>
+      <p style="margin-top: 15px;">Aplikasi ini dibuat untuk mempermudah proses pemesanan dan meningkatkan efisiensi pelayanan.</p>
+    </div>
+    <div class="button-group" style="margin-top: 15px;">
+      <button onclick="closeAboutModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+    <script>
+        window.imageBasePath = "{{ url_for('static', filename='images/') }}"; 
+    </script>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
